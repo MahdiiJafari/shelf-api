@@ -39,7 +39,7 @@ exports.login = async (req, res, next) => {
     if (!user || !(await bcrypt.compare(password, user.password))) {
       return res
         .status(401)
-        .json({ success: false, message: "Email or Password is wrong!" });
+        .json({ status: "fail", message: "Email or Password is wrong!" });
     }
     const token = generateToken(user._id);
     res.json({
@@ -52,5 +52,29 @@ exports.login = async (req, res, next) => {
       status: "fail",
       message: err.message,
     });
+  }
+};
+
+exports.protect = async (req, res, next) => {
+  let token;
+  if (
+    req.headers.authorization &&
+    req.headers.authorization.startsWith("Bearer")
+  ) {
+    token = req.headers.authorization.split(" ")[1];
+  }
+
+  if (!token) {
+    return res
+      .status(401)
+      .json({ status: "fail", message: "Please Login first!" });
+  }
+
+  try {
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    req.user = await User.findById(decoded.id);
+    next();
+  } catch (err) {
+    res.status(401).json({ status: "fail", message: "Invalid Token!" });
   }
 };
