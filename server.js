@@ -1,7 +1,7 @@
 const mongoose = require("mongoose");
 const dotenv = require("dotenv");
 
-dotenv.config({ path: "./.enc" });
+dotenv.config({ path: "./.env" });
 const app = require("./src/app");
 
 const DB = process.env.DATABASE_LOCAL;
