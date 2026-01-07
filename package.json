@@ -1,0 +1,27 @@
+{
+  "name": "shelf-api",
+  "version": "1.0.0",
+  "description": "A RESTful API for managing a library system built with Node.js, Express, MongoDB and JWT authentication",
+  "homepage": "https://github.com/MahdiiJafari/shelf-api#readme",
+  "bugs": {
+    "url": "https://github.com/MahdiiJafari/shelf-api/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/MahdiiJafari/shelf-api.git"
+  },
+  "license": "ISC",
+  "author": "Mahdi Jafari",
+  "type": "commonjs",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "nodemon server.js"
+  },
+  "dependencies": {
+    "express": "^5.2.1",
+    "jsonwebtoken": "^9.0.3",
+    "mongoose": "^9.1.2",
+    "nodemon": "^3.1.11"
+  }
+}
