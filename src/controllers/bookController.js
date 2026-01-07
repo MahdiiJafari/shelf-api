@@ -27,6 +27,14 @@ exports.getBook = catchAsync(async (req, res, next) => {
   });
 });
 
+exports.createBook = catchAsync(async (req, res, next) => {
+  const book = await Book.create({ ...req.body });
+  res.status(201).json({
+    status: "success",
+    data: { book: book },
+  });
+});
+
 exports.updateBook = catchAsync(async (req, res, next) => {
   const book = await Book.findById(req.params.id);
 
