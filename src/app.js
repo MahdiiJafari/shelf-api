@@ -12,4 +12,8 @@ app.use((req, res, next) => {
   next();
 });
 
+app.use("api/v1/books", bookRouter);
+app.use("api/v1/users", userRouter);
+
+
 module.exports = app;
