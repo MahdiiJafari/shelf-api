@@ -1,7 +1,7 @@
-const express = require("express");
+const express = require('express');
 
-const bookRouter = require("./routes/bookRoutes");
-const userRouter = require("./routes/userRoutes");
+const bookRouter = require('./routes/bookRoutes');
+const userRouter = require('./routes/userRoutes');
 
 const app = express();
 
@@ -12,8 +12,7 @@ app.use((req, res, next) => {
   next();
 });
 
-app.use("api/v1/books", bookRouter);
-app.use("api/v1/users", userRouter);
-
+app.use('/api/v1/books', bookRouter);
+app.use('/api/v1/users', userRouter);
 
 module.exports = app;

@@ -1,7 +1,7 @@
-const jwt = require("jsonwebtoken");
-const bcrypt = require("bcryptjs");
-const User = require("../models/userModel");
-const catchAsync = require("../utils/catchAsync");
+const jwt = require('jsonwebtoken');
+const User = require('../models/userModel');
+const AppError = require('../utils/appError');
+const catchAsync = require('../utils/catchAsync');
 
 const signToken = (id) => {
   return jwt.sign({ id }, process.env.JWT_SECRET, {
@@ -21,7 +21,7 @@ exports.signup = catchAsync(async (req, res, next) => {
   const token = signToken(newUser._id);
 
   res.status(201).json({
-    status: "success",
+    status: 'success',
     token,
     user: { id: newUser._id, name, email, role: newUser.role },
   });
@@ -29,17 +29,20 @@ exports.signup = catchAsync(async (req, res, next) => {
 
 exports.login = catchAsync(async (req, res, next) => {
   const { email, password } = req.body;
-  const user = await User.findOne({ email }).select("+password");
 
-  if (!user || !(await bcrypt.compare(password, user.password))) {
-    return res
-      .status(401)
-      .json({ status: "fail", message: "Email or Password is wrong!" });
+  if (!email || !password) {
+    return next(new AppError('Please provide email and password!', 400));
+  }
+
+  const user = await User.findOne({ email }).select('+password');
+
+  if (!user || !(await user.correctPassword(password, user.password))) {
+    return next(new AppError('Incorrect email or password!', 401));
   }
 
   const token = signToken(user._id);
   res.json({
-    status: "success",
+    status: 'success',
     token,
     user: { id: user._id, name: user.name, email, role: user.role },
   });
@@ -50,15 +53,15 @@ exports.protect = catchAsync(async (req, res, next) => {
 
   if (
     req.headers.authorization &&
-    req.headers.authorization.startsWith("Bearer")
+    req.headers.authorization.startsWith('Bearer')
   ) {
-    token = req.headers.authorization.split(" ")[1];
+    token = req.headers.authorization.split(' ')[1];
   }
 
   if (!token) {
     return res.status(401).json({
-      status: "fail",
-      message: "Please Login first!",
+      status: 'fail',
+      message: 'Please Login first!',
     });
   }
 
@@ -67,8 +70,8 @@ exports.protect = catchAsync(async (req, res, next) => {
 
   if (!currentUser) {
     return res.status(401).json({
-      status: "fail",
-      message: "User belonging to this token no longer exists",
+      status: 'fail',
+      message: 'User belonging to this token no longer exists',
     });
   }
 
