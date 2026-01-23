@@ -4,7 +4,11 @@ const catchAsync = require('../utils/catchAsync');
 
 exports.getAllBooks = catchAsync(async (req, res, next) => {
   console.log(req.query);
-  const features = new APIFeatures(Book.find(), req.query).filter().sort().limitFields();
+  const features = new APIFeatures(Book.find(), req.query)
+    .filter()
+    .sort()
+    .limitFields()
+    .paginate();
   const books = await features.query;
 
   res.status(200).json({
